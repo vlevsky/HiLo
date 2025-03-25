@@ -238,6 +238,16 @@
             border-radius: 10px;
         }
 
+        .btn-allin {
+    background: #9b59b6;
+    color: white;
+}
+
+.btn-allin:hover {
+    background: #8e44ad;
+    transform: translateY(-2px);
+}
+
         .multiplier-box {
             text-align: center;
             padding: 10px;
@@ -378,10 +388,12 @@
             <div class="balance">
                 Balance: $<span class="balance-amount">1000</span>
             </div>
-            <div class="bet-controls">
-                <input type="number" class="bet-amount" min="1" value="10">
-                <button class="btn btn-bet">Bet</button>
-            </div>
+            <!-- Add this button to your HTML (place it just before the bet amount input) -->
+<div class="bet-controls">
+    <button class="btn btn-allin">All In</button>
+    <input type="number" class="bet-amount" min="1" value="10">
+    <button class="btn btn-bet">Bet</button>
+</div>
         </div>
 
         <div class="multiplier-info">
@@ -454,6 +466,24 @@
             const lowerMultiplierValue = lowerMultiplierBox.querySelector('.multiplier-value');
             const higherMultiplierChance = higherMultiplierBox.querySelector('.multiplier-chance');
             const lowerMultiplierChance = lowerMultiplierBox.querySelector('.multiplier-chance');
+            // Add this to your JavaScript (in the DOM elements section)
+const allInButton = document.querySelector('.btn-allin');
+
+// Add this to your event listeners
+allInButton.addEventListener('click', goAllIn);
+
+// Add this function to your JavaScript
+function goAllIn() {
+    if (state.gameActive && state.betPlaced) return;
+    
+    if (state.balance <= 0) {
+        showMessage('No balance to go all in', 'lose');
+        return;
+    }
+    
+    betAmountInput.value = state.balance;
+    showMessage(`All in! $${state.balance} ready to bet`);
+}
 
             // Card values and suits
             const cardValues = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
