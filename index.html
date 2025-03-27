@@ -3,379 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>HiLo Card Game</title>
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #e74c3c;
-            --text: #ecf0f1;
-            --highlight: #3498db;
-            --correct: #2ecc71;
-            --wrong: #e74c3c;
-            --card-red: #e74c3c;
-            --card-black: #2c3e50;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .game-container {
-            width: 100%;
-            max-width: 800px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, var(--highlight), var(--correct));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .balance-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .balance {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .balance-amount {
-            color: var(--highlight);
-            font-size: 1.8rem;
-        }
-
-        .bet-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .bet-amount {
-            font-size: 1.2rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: none;
-            color: var(--text);
-            padding: 10px 15px;
-            border-radius: 5px;
-            width: 120px;
-            text-align: center;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-bet {
-            background: var(--highlight);
-            color: white;
-        }
-
-        .btn-bet:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .btn-bet:active {
-            transform: translateY(0);
-        }
-
-        .btn-higher {
-            background: var(--correct);
-            color: white;
-        }
-
-        .btn-higher:hover {
-            background: #27ae60;
-            transform: translateY(-2px);
-        }
-
-        .btn-lower {
-            background: var(--wrong);
-            color: white;
-        }
-
-        .btn-lower:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        .btn-cashout {
-            background: #f39c12;
-            color: white;
-        }
-
-        .btn-cashout:hover {
-            background: #d35400;
-            transform: translateY(-2px);
-        }
-
-        .cards-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .card {
-            width: 120px;
-            height: 180px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 10px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.5s ease;
-            transform-style: preserve-3d;
-        }
-
-        .card.red {
-            color: var(--card-red);
-            background: white;
-        }
-
-        .card.black {
-            color: var(--card-black);
-            background: white;
-        }
-
-        .card-value {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .card-suit {
-            font-size: 2rem;
-        }
-
-        .card-suit.top {
-            align-self: flex-start;
-        }
-
-        .card-suit.bottom {
-            align-self: flex-end;
-            transform: rotate(180deg);
-        }
-
-        .card.new {
-            animation: cardDeal 0.5s ease-out;
-        }
-
-        @keyframes cardDeal {
-            0% {
-                transform: translateY(-100px) rotate(-10deg);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0) rotate(0);
-                opacity: 1;
-            }
-        }
-
-        .game-controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .multiplier-info {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .btn-allin {
-    background: #9b59b6;
-    color: white;
-}
-
-.btn-allin:hover {
-    background: #8e44ad;
-    transform: translateY(-2px);
-}
-
-        .multiplier-box {
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            flex: 1;
-            max-width: 200px;
-            transition: all 0.3s ease;
-        }
-
-        .multiplier-box.highlight {
-            background: rgba(52, 152, 219, 0.2);
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
-        }
-
-        .multiplier-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 5px;
-        }
-
-        .multiplier-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .multiplier-chance {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .message {
-            text-align: center;
-            margin-top: 20px;
-            min-height: 24px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .message.win {
-            color: var(--correct);
-            transform: scale(1.05);
-        }
-
-        .message.lose {
-            color: var(--wrong);
-            transform: scale(1.05);
-        }
-
-        .history {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .history-title {
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-
-        .history-items {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .history-card {
-            width: 40px;
-            height: 60px;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 5px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .history-card.red {
-            color: var(--card-red);
-        }
-
-        .history-card.black {
-            color: var(--card-black);
-        }
-
-        .history-suit {
-            font-size: 0.7rem;
-        }
-
-        .history-value {
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        @media (max-width: 600px) {
-            .game-container {
-                padding: 15px;
-            }
-            
-            .cards-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .game-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .multiplier-info {
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .multiplier-box {
-                max-width: 100%;
-                width: 100%;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="game-container">
@@ -388,10 +17,11 @@
             <div class="balance">
                 Balance: $<span class="balance-amount">1000</span>
             </div>
-            <!-- Add this button to your HTML (place it just before the bet amount input) -->
+
 <div class="bet-controls">
+    <button class="btn btn-topup">Top Up</button>
     <button class="btn btn-allin">All In</button>
-    <input type="number" class="bet-amount" min="1" value="10">
+    <input type="number" class="bet-amount" min="0.01" value="10">
     <button class="btn btn-bet">Bet</button>
 </div>
         </div>
@@ -455,6 +85,7 @@
             const betButton = document.querySelector('.btn-bet');
             const higherButton = document.querySelector('.btn-higher');
             const lowerButton = document.querySelector('.btn-lower');
+            const topUpButton = document.querySelector('.btn-topup');
             const cashoutButton = document.querySelector('.btn-cashout');
             const currentCardElement = document.getElementById('current-card');
             const nextCardElement = document.getElementById('next-card');
@@ -734,6 +365,16 @@ function goAllIn() {
                     lowerMultiplierBox.classList.remove('highlight');
                 }
             }
+
+            function topUpBalance() {
+    if (state.balance < 1000) {
+        state.balance = 1000;
+        updateBalanceDisplay();
+        showMessage("Balance topped up to $1000", "win");
+    } else {
+        showMessage("Your balance is already $1000 or more", "lose");
+    }
+}
 
             // Update history display
             function updateHistoryDisplay() {
