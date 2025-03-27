@@ -97,8 +97,10 @@
             const lowerMultiplierValue = lowerMultiplierBox.querySelector('.multiplier-value');
             const higherMultiplierChance = higherMultiplierBox.querySelector('.multiplier-chance');
             const lowerMultiplierChance = lowerMultiplierBox.querySelector('.multiplier-chance');
-            // Add this to your JavaScript (in the DOM elements section)
-const allInButton = document.querySelector('.btn-allin');
+            const allInButton = document.querySelector('.btn-allin');
+
+
+topUpButton.addEventListener('click', topUpBalance); 
 
 // Add this to your event listeners
 allInButton.addEventListener('click', goAllIn);
@@ -153,9 +155,14 @@ function goAllIn() {
                 return { value, suit };
             }
 
+            if (isNaN(betAmount) || betAmount < 0.01) {
+                showMessage('Minimum bet is $0.01', 'lose');
+                return;
+}
+
             // Place a bet
             function placeBet() {
-                const betAmount = parseInt(betAmountInput.value);
+                const betAmount = parseFloat(betAmountInput.value);
                 
                 if (isNaN(betAmount) || betAmount < 1) {
                     showMessage('Please enter a valid bet amount', 'lose');
@@ -175,6 +182,16 @@ function goAllIn() {
                 updateBalanceDisplay();
                 updateGameControls();
                 showMessage(`Bet placed: $${betAmount}`);
+            }
+
+            function topUpBalance() {
+                if (state.balance < 1000) {
+                    state.balance = 1000;
+                    updateBalanceDisplay();
+                    showMessage("Balance topped up to $1000", "win");
+                } else {
+                    showMessage("Your balance is already $1000 or more", "lose");
+                }
             }
 
             // Make a guess (higher or lower)
@@ -354,6 +371,7 @@ function goAllIn() {
             function updateGameControls() {
                 betButton.disabled = state.gameActive && state.betPlaced;
                 higherButton.disabled = !state.gameActive || !state.betPlaced;
+                topUpButton.disabled = state.balance >= 1000;
                 lowerButton.disabled = !state.gameActive || !state.betPlaced;
                 cashoutButton.disabled = !state.gameActive || !state.betPlaced;
                 betAmountInput.disabled = state.gameActive && state.betPlaced;
@@ -365,16 +383,6 @@ function goAllIn() {
                     lowerMultiplierBox.classList.remove('highlight');
                 }
             }
-
-            function topUpBalance() {
-    if (state.balance < 1000) {
-        state.balance = 1000;
-        updateBalanceDisplay();
-        showMessage("Balance topped up to $1000", "win");
-    } else {
-        showMessage("Your balance is already $1000 or more", "lose");
-    }
-}
 
             // Update history display
             function updateHistoryDisplay() {
